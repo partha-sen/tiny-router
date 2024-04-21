@@ -36,7 +36,7 @@ public class MessageRouter<T> {
             Method[] methods = actionHandler.getClass().getMethods();
             for (Method method : methods) {
                 if (method.isAnnotationPresent(PayloadAction.class)) {
-                    if (method.getParameters().length == 0) {
+                    if (method.getParameters().length == 1) {
                         PayloadAction annotation = method.getAnnotation(PayloadAction.class);
                         this.actionMethods.put(annotation.value(), method);
                         this.actionObjects.put(annotation.value(), actionHandler);
