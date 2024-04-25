@@ -1,15 +1,25 @@
 package com.tiny.router.envelop;
 
 
+import java.io.Serializable;
+
 /**
  * MessageEnvelop encapsulate message in the payload field.
  * payload is a generic Type
  * @param <P> Represent generic Type
  */
-public class MessageEnvelop<P> {
+public class MessageEnvelop<P> implements Serializable {
 
     String action;
     P payload;
+
+    public MessageEnvelop() {
+    }
+
+    public MessageEnvelop(String action, P payload) {
+        this.action = action;
+        this.payload = payload;
+    }
 
     /**
      * This method returns action type

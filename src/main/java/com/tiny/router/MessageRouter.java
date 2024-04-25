@@ -1,7 +1,6 @@
 package com.tiny.router;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiny.router.annotation.PayloadAction;
 import com.tiny.router.envelop.MessageEnvelop;
@@ -54,20 +53,6 @@ public class MessageRouter<T> {
     }
 
     /**
-     * @param message Message json object as String.
-     * @throws InvocationTargetException will define in future
-     * @throws IllegalAccessException    will define in future
-     */
-    public void route(String message) throws InvocationTargetException, IllegalAccessException {
-        MessageEnvelop<?> msgEnvelop = toMessageEnvelop(message);
-        String action = msgEnvelop.getAction();
-        Method method = actionMethods.get(action);
-        Class<?> parameterType = method.getParameterTypes()[0];
-        Object payload = toPayloadType(msgEnvelop.getPayload(), parameterType);
-        method.invoke(actionObjects.get(action), payload);
-    }
-
-    /**
      * @param msgEnvelop MessageEnvelop field action contain payload as string.
      * @throws InvocationTargetException will define in future
      * @throws IllegalAccessException    will define in future
@@ -82,33 +67,17 @@ public class MessageRouter<T> {
 
 
     /**
-     * @param message represent json string
-     * @return MessageEnvelop object
-     */
-    private MessageEnvelop<?> toMessageEnvelop(String message) {
-        try {
-            return mapper.readValue(message, new TypeReference<>() {
-            });
-        } catch (JsonProcessingException e) {
-            log.info("Json processing exception {}", e.getMessage());
-            throw new RuntimeException("Invalid message format ", e);
-        }
-    }
-
-    /**
      * This method convert object Type
      *
-     * @param payload represent payload object.
+     * @param payload represent payload String.
      * @param payloadClass type of payload
      * @return Object of type payloadClass
      */
-    private Object toPayloadType(Object payload, Class<?> payloadClass) {
+    private Object toPayloadType(String payload, Class<?> payloadClass) {
         try {
-            return mapper.convertValue(payload, payloadClass);
-        } catch (RuntimeException e) {
+            return mapper.readValue(payload, payloadClass);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException("Fail to convert payload to " + payloadClass.getTypeName(), e);
         }
     }
-
-
 }
