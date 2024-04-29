@@ -2,8 +2,9 @@ package com.tiny.router;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tiny.router.annotation.PayloadAction;
-import com.tiny.router.envelop.MessageEnvelop;
+import com.tiny.router.annotation.RouteEntry;
+import com.tiny.router.model.MessageEnvelop;
+import com.tiny.router.model.RouteValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,8 +19,7 @@ import java.util.Map;
  */
 
 public class MessageRouter<T> {
-    private final Map<String, Method> actionMethods = new HashMap<>();
-    private final Map<String, T> actionObjects = new HashMap<>();
+    private final Map<String, RouteValue<T>>  routeMap = new HashMap<>();
     private final ObjectMapper mapper = new ObjectMapper();
 
 
@@ -31,22 +31,23 @@ public class MessageRouter<T> {
     public MessageRouter(List<T> actionHandlers) {
 
         for (T actionHandler : actionHandlers) {
-            boolean isPayloadActionAnnotationPresent = false;
+            boolean isRouteEntryAnnotationPresent = false;
             Method[] methods = actionHandler.getClass().getMethods();
             for (Method method : methods) {
-                if (method.isAnnotationPresent(PayloadAction.class)) {
+                if (method.isAnnotationPresent(RouteEntry.class)) {
                     if (method.getParameters().length == 1) {
-                        PayloadAction annotation = method.getAnnotation(PayloadAction.class);
-                        this.actionMethods.put(annotation.value(), method);
-                        this.actionObjects.put(annotation.value(), actionHandler);
-                        isPayloadActionAnnotationPresent = true;
+                        RouteEntry annotation = method.getAnnotation(RouteEntry.class);
+                        Class<?> firstParameterType = method.getParameterTypes()[0];
+                        RouteValue<T> routeValue = new RouteValue<>(actionHandler, method, firstParameterType);
+                        this.routeMap.put(annotation.action() + annotation.version(), routeValue);
+                        isRouteEntryAnnotationPresent = true;
                         break;
                     }else {
                         throw new RuntimeException("Method: "+method.getName()+" of Class: "+actionHandler.getClass().getName() +" must contain single argument.");
                     }
                 }
             }
-            if (!isPayloadActionAnnotationPresent) {
+            if (!isRouteEntryAnnotationPresent) {
                 throw new RuntimeException("PayloadAction annotation missing on method of " + actionHandler.getClass());
             }
         }
@@ -58,11 +59,12 @@ public class MessageRouter<T> {
      * @throws IllegalAccessException    will define in future
      */
     public void route(MessageEnvelop<String> msgEnvelop) throws InvocationTargetException, IllegalAccessException {
-        String action = msgEnvelop.getAction();
-        Method method = actionMethods.get(action);
-        Class<?> parameterType = method.getParameterTypes()[0];
+        RouteValue<T> routeValue = routeMap.get(msgEnvelop.getAction());
+        Method method = routeValue.getMethod();
+        Class<?> parameterType = routeValue.getParameterType();
+        T instance = routeValue.getInstance();
         Object payload = toPayloadType(msgEnvelop.getPayload(), parameterType);
-        method.invoke(actionObjects.get(action), payload);
+        method.invoke(instance, payload);
     }
 
 

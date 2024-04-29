@@ -1,6 +1,6 @@
 package com.tiny.router.serialization;
 
-import com.tiny.router.envelop.MessageEnvelop;
+import com.tiny.router.model.MessageEnvelop;
 import org.junit.jupiter.api.Test;
 
 

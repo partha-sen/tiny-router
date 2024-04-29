@@ -12,10 +12,17 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface PayloadAction {
+public @interface RouteEntry {
 
     /**
-     * @return value
+     *
+     * @return action that should match with MessageEnvelop action;
      */
-    String value() default "";
+    String action();
+
+    /**
+     *
+     * @return model version;
+     */
+    String version() default "";
 }

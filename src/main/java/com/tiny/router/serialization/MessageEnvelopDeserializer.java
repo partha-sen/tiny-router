@@ -2,7 +2,7 @@ package com.tiny.router.serialization;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tiny.router.envelop.MessageEnvelop;
+import com.tiny.router.model.MessageEnvelop;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 

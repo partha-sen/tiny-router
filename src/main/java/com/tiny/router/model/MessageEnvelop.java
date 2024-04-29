@@ -1,4 +1,4 @@
-package com.tiny.router.envelop;
+package com.tiny.router.model;
 
 
 import java.io.Serializable;
@@ -11,6 +11,8 @@ import java.io.Serializable;
 public class MessageEnvelop<P> implements Serializable {
 
     String action;
+
+    String version;
     P payload;
 
     public MessageEnvelop() {
@@ -18,6 +20,12 @@ public class MessageEnvelop<P> implements Serializable {
 
     public MessageEnvelop(String action, P payload) {
         this.action = action;
+        this.payload = payload;
+    }
+
+    public MessageEnvelop(String action, String version, P payload) {
+        this.action = action;
+        this.version = version;
         this.payload = payload;
     }
 
@@ -35,6 +43,14 @@ public class MessageEnvelop<P> implements Serializable {
      */
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     /**
