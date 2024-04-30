@@ -62,6 +62,19 @@ public class MessageEnvelop<P> implements Serializable {
     }
 
     /**
+     * This method calculate route path
+     * @return route path
+     */
+
+    public String routePath() {
+        String path = action;
+        if(version != null){
+            path = path + version;
+        }
+        return path;
+    }
+
+    /**
      * This method set action type
      * @param action represent message related to some action.
      */

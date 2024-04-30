@@ -72,11 +72,8 @@ public class MessageRouter<T> {
      */
     public void route(MessageEnvelop<String> msgEnvelop) throws RouteNotFoundException {
 
-        String path = msgEnvelop.getAction();
-        if(msgEnvelop.getVersion() != null){
-            path = path + msgEnvelop.getVersion();
-        }
-        RouteData<T> routeData = routeMap.get(path);
+        String routPath = msgEnvelop.routePath();
+        RouteData<T> routeData = routeMap.get(routPath);
         if(routeData == null ){
             String message = String.format("Route not configured for action %s and version %s", msgEnvelop.getAction(), msgEnvelop.getVersion());
             log.info(message);
