@@ -1,11 +1,12 @@
-package com.tiny.router.serialization;
+package com.tiny.router.model;
 
-import java.io.Serializable;
-
-public class Address implements Serializable {
+public class Address {
     String name;
     String state;
     String street;
+
+    public Address() {
+    }
 
     public Address(String name, String state, String street) {
         this.name = name;
@@ -35,5 +36,10 @@ public class Address implements Serializable {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    @Override
+    public String toString() {
+        return "Name :"+name+" State :"+state+" Street :"+street;
     }
 }

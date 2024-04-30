@@ -9,19 +9,43 @@ import java.io.Serializable;
  * @param <P> Represent generic Type
  */
 public class MessageEnvelop<P> implements Serializable {
-
+    /**
+     * message action.
+     */
     String action;
 
+    /**
+     * message payload version
+     */
     String version;
+    /**
+     * message payload data.
+     */
     P payload;
 
+    /**
+     * Default constructor
+     */
     public MessageEnvelop() {
     }
+
+    /**
+     * Constructor
+     * @param action message action.
+     * @param payload message payload object.
+     */
 
     public MessageEnvelop(String action, P payload) {
         this.action = action;
         this.payload = payload;
     }
+
+    /**
+     *
+     * @param action action message action.
+     * @param version message payload version.
+     * @param payload message payload object.
+     */
 
     public MessageEnvelop(String action, String version, P payload) {
         this.action = action;
@@ -45,12 +69,12 @@ public class MessageEnvelop<P> implements Serializable {
         this.action = action;
     }
 
+    /**
+     *
+     * @return message payload version.
+     */
     public String getVersion() {
         return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     /**

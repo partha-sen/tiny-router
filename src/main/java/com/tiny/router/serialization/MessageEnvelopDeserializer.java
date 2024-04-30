@@ -8,9 +8,19 @@ import org.apache.kafka.common.serialization.Deserializer;
 
 import java.io.IOException;
 
+/**
+ * MessageEnvelopDeserializer deserialize Kafka message.
+ */
 public class MessageEnvelopDeserializer implements Deserializer<MessageEnvelop<String>> {
 
     ObjectMapper mapper = new ObjectMapper();
+
+    /**
+     *
+     * @param topic kafka topic.
+     * @param bytes byte array.
+     * @return MessageEnvelop object.
+     */
     @Override
     public MessageEnvelop<String> deserialize(String topic, byte[] bytes) {
         try {
