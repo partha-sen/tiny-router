@@ -3,7 +3,7 @@ package com.tiny.router.exception;
 /**
  * RouteNotFoundException class
  */
-public class RouteNotFoundException extends Exception {
+public class RouteNotFoundException extends RuntimeException {
     /**
      *
      * @param message exception message

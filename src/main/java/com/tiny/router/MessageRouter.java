@@ -69,8 +69,10 @@ public class MessageRouter<T> {
     /**
      * @param msgEnvelop MessageEnvelop.
      * @throws RouteNotFoundException when no route is configured.
+     * @throws MethodInvocationException when fail to call method through java reflection.
+     * @throws PayloadConversionException when Fail to convert payload to object Type.
      */
-    public void route(MessageEnvelop<String> msgEnvelop) throws RouteNotFoundException {
+    public void route(MessageEnvelop<String> msgEnvelop) {
 
         String routPath = msgEnvelop.routePath();
         RouteData<T> routeData = routeMap.get(routPath);
@@ -103,7 +105,7 @@ public class MessageRouter<T> {
         try {
             return mapper.readValue(payload, payloadClass);
         } catch (JsonProcessingException e) {
-            String message = String.format("Fail to convert payload to object Type %s",  payloadClass.getTypeName());
+            String message = String.format("Fail to convert json payload to object Type %s",  payloadClass.getTypeName());
             log.info(message);
             throw new PayloadConversionException(message, e);
         }
